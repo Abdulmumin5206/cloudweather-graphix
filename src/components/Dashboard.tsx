@@ -28,6 +28,27 @@ const Dashboard: React.FC = () => {
   const [rainChanceData, setRainChanceData] = useState<{ time: string; value: number }[]>([]);
   const [uvIndexData, setUvIndexData] = useState<{ time: string; value: number }[]>([]);
 
+  // Load saved data from localStorage on component mount
+  useEffect(() => {
+    try {
+      // Load temperature data
+      const savedTempData = localStorage.getItem('temperatureData');
+      if (savedTempData) {
+        const parsedData = JSON.parse(savedTempData);
+        setTemperatureData(parsedData);
+      }
+      
+      // Load humidity data
+      const savedHumidityData = localStorage.getItem('humidityData');
+      if (savedHumidityData) {
+        const parsedData = JSON.parse(savedHumidityData);
+        setHumidityData(parsedData);
+      }
+    } catch (error) {
+      console.error('Error loading saved data:', error);
+    }
+  }, []);
+
   // Fetch real-time temperature and humidity data
   const fetchWeatherData = async () => {
     try {
@@ -48,6 +69,10 @@ const Dashboard: React.FC = () => {
           newData.shift();
         }
         newData.push({ time: timeString, value: data.temperature });
+        
+        // Save to localStorage
+        localStorage.setItem('temperatureData', JSON.stringify(newData));
+        
         return newData;
       });
       
@@ -58,6 +83,10 @@ const Dashboard: React.FC = () => {
           newData.shift();
         }
         newData.push({ time: timeString, value: data.humidity });
+        
+        // Save to localStorage
+        localStorage.setItem('humidityData', JSON.stringify(newData));
+        
         return newData;
       });
     } catch (error) {
