@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { useApp } from '@/lib/AppContext';
 import ThemeToggle from './ThemeToggle';
@@ -6,6 +6,7 @@ import LanguageToggle from './LanguageToggle';
 
 const Header: React.FC = () => {
   const { t } = useApp();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   return (
     <header className="w-full py-4 px-6 glass-card z-10 animate-fade-in">
@@ -43,7 +44,9 @@ const Header: React.FC = () => {
           </svg>
           <h1 className="text-xl font-medium">{t('weatherStation')}</h1>
         </div>
-        <div className="flex items-center">
+        
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center">
           <nav className="mr-6">
             <ul className="flex space-x-8">
               <li className="relative group">
@@ -65,7 +68,65 @@ const Header: React.FC = () => {
             <ThemeToggle />
           </div>
         </div>
+        
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center">
+          <div className="flex space-x-2 mr-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-md focus:outline-none"
+          >
+            <svg 
+              width="24" 
+              height="24" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              className="text-current"
+            >
+              {mobileMenuOpen ? (
+                <path 
+                  d="M18 6L6 18M6 6L18 18" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+              ) : (
+                <path 
+                  d="M4 6H20M4 12H20M4 18H20" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
+      
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="mt-4 md:hidden">
+          <nav>
+            <ul className="flex flex-col space-y-4">
+              <li className="relative">
+                <a href="#" className="text-sm font-medium block py-2">Dashboard</a>
+              </li>
+              <li className="relative">
+                <a href="#" className="text-sm font-medium block py-2">Statistics</a>
+              </li>
+              <li className="relative">
+                <a href="#" className="text-sm font-medium block py-2">Settings</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
