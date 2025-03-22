@@ -18,6 +18,10 @@ const Dashboard: React.FC = () => {
   
   const [temperatureData, setTemperatureData] = useState<{ time: string; value: number }[]>([]);
   const [humidityData, setHumidityData] = useState<{ time: string; value: number }[]>([]);
+  const [pressureData, setPressureData] = useState<{ time: string; value: number }[]>([]);
+  const [windSpeedData, setWindSpeedData] = useState<{ time: string; value: number }[]>([]);
+  const [rainChanceData, setRainChanceData] = useState<{ time: string; value: number }[]>([]);
+  const [uvIndexData, setUvIndexData] = useState<{ time: string; value: number }[]>([]);
 
   useEffect(() => {
     // Simulate loading data from an API
@@ -45,9 +49,33 @@ const Dashboard: React.FC = () => {
         value: Math.floor(Math.random() * 30) + 50
       }));
 
+      const pressureChartData = Array.from({ length: 24 }, (_, i) => ({
+        time: `${i}:00`,
+        value: Math.floor(Math.random() * 20) + 1000
+      }));
+
+      const windSpeedChartData = Array.from({ length: 24 }, (_, i) => ({
+        time: `${i}:00`,
+        value: Math.floor(Math.random() * 15) + 5
+      }));
+
+      const rainChanceChartData = Array.from({ length: 24 }, (_, i) => ({
+        time: `${i}:00`,
+        value: Math.floor(Math.random() * 100)
+      }));
+
+      const uvIndexChartData = Array.from({ length: 24 }, (_, i) => ({
+        time: `${i}:00`,
+        value: Math.floor(Math.random() * 11)
+      }));
+
       setWeatherData(tempData);
       setTemperatureData(tempChartData);
       setHumidityData(humidityChartData);
+      setPressureData(pressureChartData);
+      setWindSpeedData(windSpeedChartData);
+      setRainChanceData(rainChanceChartData);
+      setUvIndexData(uvIndexChartData);
       setLoading(false);
     };
 
@@ -156,6 +184,7 @@ const Dashboard: React.FC = () => {
         />
       </div>
       
+      <h3 className="text-xl font-light mb-6 animate-fade-in">24-Hour Trends</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <WeatherChart 
           title="Temperature (24h)" 
@@ -170,6 +199,40 @@ const Dashboard: React.FC = () => {
           unit="%" 
           loading={loading}
           color="#14B8A6"
+        />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <WeatherChart 
+          title="Pressure (24h)" 
+          data={pressureData} 
+          unit="hPa" 
+          loading={loading}
+          color="#8B5CF6"
+        />
+        <WeatherChart 
+          title="Wind Speed (24h)" 
+          data={windSpeedData} 
+          unit="km/h" 
+          loading={loading}
+          color="#F59E0B"
+        />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <WeatherChart 
+          title="Rain Chance (24h)" 
+          data={rainChanceData} 
+          unit="%" 
+          loading={loading}
+          color="#3B82F6"
+        />
+        <WeatherChart 
+          title="UV Index (24h)" 
+          data={uvIndexData} 
+          unit="" 
+          loading={loading}
+          color="#EC4899"
         />
       </div>
       
