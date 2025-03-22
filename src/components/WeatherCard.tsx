@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React from "react";
 import { cn } from "@/lib/utils";
 
 interface WeatherCardProps {
@@ -17,16 +16,16 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
   unit,
   icon,
   className,
-  loading = false
+  loading = false,
 }) => {
   return (
-    <div 
+    <div
       className={cn(
         "glass-card p-6 flex flex-col items-center justify-center animate-fade-up",
         loading && "relative overflow-hidden",
         className
       )}
-      style={{ animationDelay: '0.1s' }}
+      style={{ animationDelay: "0.1s" }}
     >
       {loading ? (
         <>
