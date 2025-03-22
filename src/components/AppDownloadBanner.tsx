@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/lib/AppContext';
+import { checkAppInstallable, promptInstall } from '@/registerServiceWorker';
 
 const AppDownloadBanner = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isInstallable, setIsInstallable] = useState(false);
   const { t } = useApp();
   
   useEffect(() => {
@@ -14,13 +16,47 @@ const AppDownloadBanner = () => {
     // Check if banner was previously dismissed (using localStorage)
     const bannerDismissed = localStorage.getItem('appBannerDismissed');
     
-    // Show banner only on mobile and if not previously dismissed
+    // Check if app is installable (PWA criteria met)
+    const installable = checkAppInstallable();
+    setIsInstallable(installable);
+    
+    // Show banner only on mobile, if not previously dismissed, and if installable
     setIsVisible(isMobile && !bannerDismissed);
   }, []);
+
+  // Recheck installable status when visibility changes
+  useEffect(() => {
+    if (isVisible) {
+      const checkInstallable = () => {
+        setIsInstallable(checkAppInstallable());
+      };
+      
+      // Check immediately and then on beforeinstallprompt events
+      checkInstallable();
+      window.addEventListener('beforeinstallprompt', checkInstallable);
+      
+      return () => {
+        window.removeEventListener('beforeinstallprompt', checkInstallable);
+      };
+    }
+  }, [isVisible]);
   
   const dismissBanner = () => {
     setIsVisible(false);
     localStorage.setItem('appBannerDismissed', 'true');
+  };
+
+  const handleInstall = async () => {
+    // If app is installable as PWA, prompt to install
+    if (isInstallable) {
+      const installed = await promptInstall();
+      if (installed) {
+        dismissBanner();
+      }
+    } else {
+      // Fallback to app store if not installable as PWA
+      window.location.href = 'https://play.google.com/store/apps/details?id=com.cloudweather.graphix';
+    }
   };
   
   // If banner is not visible, don't render anything
@@ -36,16 +72,18 @@ const AppDownloadBanner = () => {
         </div>
         <div>
           <p className="font-medium">CloudWeather GraphiX</p>
-          <p className="text-xs text-primary-foreground/80">Get a better experience with our app</p>
+          <p className="text-xs text-primary-foreground/80">
+            {isInstallable ? 'Install this app on your device' : 'Get a better experience with our app'}
+          </p>
         </div>
       </div>
       <div className="flex items-center gap-2">
         <Button 
           variant="secondary" 
-          onClick={() => window.location.href = 'https://play.google.com/store/apps/details?id=com.cloudweather.graphix'}
+          onClick={handleInstall}
           className="text-xs px-3 py-1 h-auto"
         >
-          Download
+          {isInstallable ? 'Install' : 'Download'}
         </Button>
         <Button 
           variant="ghost" 
