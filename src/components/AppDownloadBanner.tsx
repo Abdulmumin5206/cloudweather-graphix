@@ -21,14 +21,19 @@ const AppDownloadBanner = () => {
     setIsInstallable(installable);
     
     // Show banner only on mobile, if not previously dismissed, and if installable
-    setIsVisible(isMobile && !bannerDismissed);
+    setIsVisible(isMobile && !bannerDismissed && installable);
   }, []);
 
   // Recheck installable status when visibility changes
   useEffect(() => {
     if (isVisible) {
       const checkInstallable = () => {
-        setIsInstallable(checkAppInstallable());
+        const installable = checkAppInstallable();
+        setIsInstallable(installable);
+        // Hide banner if no longer installable
+        if (!installable) {
+          setIsVisible(false);
+        }
       };
       
       // Check immediately and then on beforeinstallprompt events
@@ -47,20 +52,14 @@ const AppDownloadBanner = () => {
   };
 
   const handleInstall = async () => {
-    // If app is installable as PWA, prompt to install
-    if (isInstallable) {
-      const installed = await promptInstall();
-      if (installed) {
-        dismissBanner();
-      }
-    } else {
-      // Fallback to app store if not installable as PWA
-      window.location.href = 'https://play.google.com/store/apps/details?id=com.cloudweather.graphix';
+    const installed = await promptInstall();
+    if (installed) {
+      dismissBanner();
     }
   };
   
-  // If banner is not visible, don't render anything
-  if (!isVisible) return null;
+  // If banner is not visible or app is not installable, don't render anything
+  if (!isVisible || !isInstallable) return null;
   
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-primary text-primary-foreground p-4 flex items-center justify-between z-50 shadow-lg">
@@ -72,9 +71,7 @@ const AppDownloadBanner = () => {
         </div>
         <div>
           <p className="font-medium">CloudWeather GraphiX</p>
-          <p className="text-xs text-primary-foreground/80">
-            {isInstallable ? 'Install this app on your device' : 'Get a better experience with our app'}
-          </p>
+          <p className="text-xs text-primary-foreground/80">Install this app on your device</p>
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -83,7 +80,7 @@ const AppDownloadBanner = () => {
           onClick={handleInstall}
           className="text-xs px-3 py-1 h-auto"
         >
-          {isInstallable ? 'Install' : 'Download'}
+          Install
         </Button>
         <Button 
           variant="ghost" 
