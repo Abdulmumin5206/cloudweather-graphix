@@ -1,8 +1,12 @@
-
 import React from 'react';
 import { cn } from "@/lib/utils";
+import { useApp } from '@/lib/AppContext';
+import ThemeToggle from './ThemeToggle';
+import LanguageToggle from './LanguageToggle';
 
 const Header: React.FC = () => {
+  const { t } = useApp();
+  
   return (
     <header className="w-full py-4 px-6 glass-card z-10 animate-fade-in">
       <div className="flex items-center justify-between">
@@ -37,24 +41,30 @@ const Header: React.FC = () => {
               strokeLinejoin="round"
             />
           </svg>
-          <h1 className="text-xl font-medium">Weather Station</h1>
+          <h1 className="text-xl font-medium">{t('weatherStation')}</h1>
         </div>
-        <nav>
-          <ul className="flex space-x-8">
-            <li className="relative group">
-              <a href="#" className="text-sm font-medium">Dashboard</a>
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-weather-blue scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </li>
-            <li className="relative group">
-              <a href="#" className="text-sm font-medium">Statistics</a>
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-weather-blue scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </li>
-            <li className="relative group">
-              <a href="#" className="text-sm font-medium">Settings</a>
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-weather-blue scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </li>
-          </ul>
-        </nav>
+        <div className="flex items-center">
+          <nav className="mr-6">
+            <ul className="flex space-x-8">
+              <li className="relative group">
+                <a href="#" className="text-sm font-medium">Dashboard</a>
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-weather-blue scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              </li>
+              <li className="relative group">
+                <a href="#" className="text-sm font-medium">Statistics</a>
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-weather-blue scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              </li>
+              <li className="relative group">
+                <a href="#" className="text-sm font-medium">Settings</a>
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-weather-blue scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              </li>
+            </ul>
+          </nav>
+          <div className="flex space-x-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
+        </div>
       </div>
     </header>
   );

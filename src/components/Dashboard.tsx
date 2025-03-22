@@ -1,11 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import WeatherCard from './WeatherCard';
 import WeatherChart from './WeatherChart';
 import Forecast from './Forecast';
 import HistoricalData from './HistoricalData';
+import { useApp } from '@/lib/AppContext';
 
 const Dashboard: React.FC = () => {
+  const { t } = useApp();
   const [loading, setLoading] = useState(true);
   const [weatherData, setWeatherData] = useState({
     temperature: 0,
@@ -29,45 +30,77 @@ const Dashboard: React.FC = () => {
       // In a real app, you would fetch data from your weather API here
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Sample data - replace with actual API calls
+      // Generate more realistic weather data
+      const currentTemp = Math.floor(Math.random() * 20) + 10; // 10-30°C
+      const currentHumidity = Math.floor(Math.random() * 40) + 45; // 45-85%
+      const currentPressure = Math.floor(Math.random() * 30) + 1000; // 1000-1030 hPa
+      const currentWindSpeed = Math.floor(Math.random() * 25) + 5; // 5-30 km/h
+      const currentRainChance = Math.floor(Math.random() * 100); // 0-100%
+      const currentUvIndex = Math.floor(Math.random() * 11); // 0-10
+
       const tempData = {
-        temperature: 23,
-        humidity: 65,
-        pressure: 1013,
-        windSpeed: 12,
-        rainChance: 30,
-        uvIndex: 6,
+        temperature: currentTemp,
+        humidity: currentHumidity,
+        pressure: currentPressure,
+        windSpeed: currentWindSpeed,
+        rainChance: currentRainChance,
+        uvIndex: currentUvIndex,
       };
 
-      const tempChartData = Array.from({ length: 24 }, (_, i) => ({
-        time: `${i}:00`,
-        value: Math.floor(Math.random() * 10) + 18
-      }));
+      // Generate 24-hour data with realistic patterns
+      const generateHourlyData = (current: number, range: number, min: number = 0, max: number = 100) => {
+        // Create a curve that generally peaks during the day and drops at night
+        return Array.from({ length: 24 }, (_, i) => {
+          // Generate a value that follows a daily pattern
+          let timeEffect = Math.sin((i - 6) * Math.PI / 12); // Peak at noon (i=12)
+          let randomVariation = (Math.random() * 2 - 1) * (range * 0.3); // Add some randomness
+          let value = current + (timeEffect * range) + randomVariation;
+          
+          // Ensure value stays within bounds
+          value = Math.max(min, Math.min(max, value));
+          return {
+            time: `${i}:00`,
+            value: Math.round(value * 10) / 10 // Round to 1 decimal place
+          };
+        });
+      };
 
-      const humidityChartData = Array.from({ length: 24 }, (_, i) => ({
-        time: `${i}:00`,
-        value: Math.floor(Math.random() * 30) + 50
-      }));
-
-      const pressureChartData = Array.from({ length: 24 }, (_, i) => ({
-        time: `${i}:00`,
-        value: Math.floor(Math.random() * 20) + 1000
-      }));
-
-      const windSpeedChartData = Array.from({ length: 24 }, (_, i) => ({
-        time: `${i}:00`,
-        value: Math.floor(Math.random() * 15) + 5
-      }));
-
-      const rainChanceChartData = Array.from({ length: 24 }, (_, i) => ({
-        time: `${i}:00`,
-        value: Math.floor(Math.random() * 100)
-      }));
-
-      const uvIndexChartData = Array.from({ length: 24 }, (_, i) => ({
-        time: `${i}:00`,
-        value: Math.floor(Math.random() * 11)
-      }));
+      // Temperature data (daily pattern, higher during day, lower at night)
+      const tempChartData = generateHourlyData(currentTemp, 8, 5, 35);
+      
+      // Humidity data (inverse to temperature)
+      const humidityChartData = generateHourlyData(currentHumidity, 15, 30, 95);
+      
+      // Pressure data (subtle changes throughout day)
+      const pressureChartData = generateHourlyData(currentPressure, 5, 990, 1040);
+      
+      // Wind speed (variable throughout day)
+      const windSpeedChartData = generateHourlyData(currentWindSpeed, 10, 0, 40);
+      
+      // Rain chance (can spike at certain hours)
+      const rainChanceChartData = Array.from({ length: 24 }, (_, i) => {
+        // Maybe create a few rain windows
+        const isRainWindow = (i > 8 && i < 11) || (i > 16 && i < 19);
+        const baseChance = isRainWindow ? currentRainChance + 20 : currentRainChance - 20;
+        const value = Math.max(0, Math.min(100, baseChance + (Math.random() * 30 - 15)));
+        return {
+          time: `${i}:00`,
+          value: Math.round(value)
+        };
+      });
+      
+      // UV index (zero at night, peaks mid-day)
+      const uvIndexChartData = Array.from({ length: 24 }, (_, i) => {
+        // UV is 0 at night, peaks at noon
+        const isDay = i >= 6 && i <= 18;
+        const hourFromNoon = Math.abs(i - 12);
+        const dayEffect = isDay ? Math.max(0, 1 - (hourFromNoon / 6)) : 0;
+        const value = Math.round(currentUvIndex * dayEffect);
+        return {
+          time: `${i}:00`,
+          value
+        };
+      });
 
       setWeatherData(tempData);
       setTemperatureData(tempChartData);
@@ -85,13 +118,13 @@ const Dashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h2 className="text-2xl font-light mb-2 animate-fade-in">Current Conditions</h2>
-        <p className="text-gray-500 animate-fade-in">Last updated: {new Date().toLocaleString()}</p>
+        <h2 className="text-2xl font-light mb-2 animate-fade-in">{t('currentConditions')}</h2>
+        <p className="text-gray-500 animate-fade-in">{t('lastUpdated')}: {new Date().toLocaleString()}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <WeatherCard
-          title="Temperature"
+          title={t('temperature')}
           value={weatherData.temperature}
           unit="°C"
           loading={loading}
@@ -109,7 +142,7 @@ const Dashboard: React.FC = () => {
           }
         />
         <WeatherCard
-          title="Humidity"
+          title={t('humidity')}
           value={weatherData.humidity}
           unit="%"
           loading={loading}
@@ -123,7 +156,7 @@ const Dashboard: React.FC = () => {
           }
         />
         <WeatherCard
-          title="Pressure"
+          title={t('pressure')}
           value={weatherData.pressure}
           unit="hPa"
           loading={loading}
@@ -135,7 +168,7 @@ const Dashboard: React.FC = () => {
           }
         />
         <WeatherCard
-          title="Wind Speed"
+          title={t('windSpeed')}
           value={weatherData.windSpeed}
           unit="km/h"
           loading={loading}
@@ -151,7 +184,7 @@ const Dashboard: React.FC = () => {
           }
         />
         <WeatherCard
-          title="Rain Chance"
+          title={t('rainChance')}
           value={weatherData.rainChance}
           unit="%"
           loading={loading}
@@ -165,7 +198,7 @@ const Dashboard: React.FC = () => {
           }
         />
         <WeatherCard
-          title="UV Index"
+          title={t('uvIndex')}
           value={weatherData.uvIndex}
           loading={loading}
           icon={
@@ -184,17 +217,17 @@ const Dashboard: React.FC = () => {
         />
       </div>
       
-      <h3 className="text-xl font-light mb-6 animate-fade-in">24-Hour Trends</h3>
+      <h3 className="text-xl font-light mb-6 animate-fade-in">{t('hourTrends')}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <WeatherChart 
-          title="Temperature (24h)" 
+          title={t('temperatureChart')} 
           data={temperatureData} 
           unit="°C" 
           loading={loading}
           color="#38BDF8"
         />
         <WeatherChart 
-          title="Humidity (24h)" 
+          title={t('humidityChart')} 
           data={humidityData} 
           unit="%" 
           loading={loading}
@@ -204,14 +237,14 @@ const Dashboard: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <WeatherChart 
-          title="Pressure (24h)" 
+          title={t('pressureChart')} 
           data={pressureData} 
           unit="hPa" 
           loading={loading}
           color="#8B5CF6"
         />
         <WeatherChart 
-          title="Wind Speed (24h)" 
+          title={t('windSpeedChart')} 
           data={windSpeedData} 
           unit="km/h" 
           loading={loading}
@@ -221,14 +254,14 @@ const Dashboard: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <WeatherChart 
-          title="Rain Chance (24h)" 
+          title={t('rainChanceChart')} 
           data={rainChanceData} 
           unit="%" 
           loading={loading}
           color="#3B82F6"
         />
         <WeatherChart 
-          title="UV Index (24h)" 
+          title={t('uvIndexChart')} 
           data={uvIndexData} 
           unit="" 
           loading={loading}
