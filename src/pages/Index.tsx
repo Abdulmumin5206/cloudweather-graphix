@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '@/components/Header';
 import Dashboard from '@/components/Dashboard';
 import { useApp } from '@/lib/AppContext';
+import AppDownload from '@/components/AppDownload';
 
 const Index = () => {
   const { t } = useApp();
@@ -15,6 +16,7 @@ const Index = () => {
       <footer className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
         <p>{t('copyright', { year: new Date().getFullYear() })}</p>
       </footer>
+      <AppDownload />
     </div>
   );
 };

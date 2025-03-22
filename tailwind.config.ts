@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -117,6 +116,10 @@ export default {
 					'100%': {
 						backgroundPosition: '1000px 0'
 					}
+				},
+				'slide-up': {
+					'0%': { transform: 'translateY(100%)' },
+					'100%': { transform: 'translateY(0)' }
 				}
 			},
 			animation: {
@@ -125,7 +128,8 @@ export default {
 				'fade-in': 'fade-in 0.5s ease-out',
 				'fade-up': 'fade-up 0.5s ease-out',
 				'pulse-slow': 'pulse-slow 3s infinite ease-in-out',
-				'shimmer': 'shimmer 2s infinite linear'
+				'shimmer': 'shimmer 2s infinite linear',
+				'slide-up': 'slide-up 0.3s ease-out'
 			},
 			backdropFilter: {
 				'none': 'none',
@@ -134,6 +138,9 @@ export default {
 			boxShadow: {
 				'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
 				'glass-hover': '0 4px 30px rgba(0, 0, 0, 0.15)',
+			},
+			backgroundImage: {
+				'weather-gradient': 'linear-gradient(to bottom right, #E0F2FE, #DBEAFE, #F0FDFA)',
 			}
 		}
 	},

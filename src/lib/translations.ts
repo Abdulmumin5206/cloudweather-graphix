@@ -51,6 +51,15 @@ export const translations = {
     language: 'Language',
     english: 'English',
     uzbek: 'Uzbek',
+    
+    // App Download
+    getOurApp: 'Get our app for a better experience',
+    download: 'Download',
+    downloadOurApp: 'Download Our App',
+    scanQRCode: 'Scan this QR code with your phone camera',
+    orDownloadDirectly: 'Or download directly',
+    downloadFromAppStore: 'Download from App Store',
+    downloadFromGooglePlay: 'Download from Google Play',
   },
   uz: {
     // General
@@ -102,6 +111,15 @@ export const translations = {
     language: 'Til',
     english: 'Inglizcha',
     uzbek: 'O\'zbekcha',
+    
+    // App Download
+    getOurApp: 'Yaxshiroq tajriba uchun ilovamizni yuklab oling',
+    download: 'Yuklab olish',
+    downloadOurApp: 'Ilovamizni yuklab oling',
+    scanQRCode: 'Telefon kamerangiz bilan ushbu QR kodni skanerlang',
+    orDownloadDirectly: 'Yoki to\'g\'ridan-to\'g\'ri yuklab oling',
+    downloadFromAppStore: 'App Store dan yuklab olish',
+    downloadFromGooglePlay: 'Google Play dan yuklab olish',
   }
 };
 
