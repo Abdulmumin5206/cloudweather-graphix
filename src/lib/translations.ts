@@ -60,6 +60,17 @@ export const translations = {
     orDownloadDirectly: 'Or download directly',
     downloadFromAppStore: 'Download from App Store',
     downloadFromGooglePlay: 'Download from Google Play',
+    
+    // Google Play Store download
+    dontHaveGooglePlay: 'Don\'t have Google Play Store?',
+    installGooglePlay: 'How to install Google Play Store',
+    googlePlayInstructions: 'If your device doesn\'t have Google Play Store, follow these steps:',
+    googlePlayStep1: 'Download the Google Play Store APK from the button below',
+    googlePlayStep2: 'Allow installation from unknown sources in your device settings',
+    googlePlayStep3: 'Open the downloaded APK file and install it',
+    googlePlayStep4: 'Once installed, you can download our app from Google Play',
+    downloadGooglePlay: 'Download Google Play Store APK',
+    safetyNote: 'Note: Only download from trusted sources for your safety',
   },
   uz: {
     // General
@@ -120,6 +131,17 @@ export const translations = {
     orDownloadDirectly: 'Yoki to\'g\'ridan-to\'g\'ri yuklab oling',
     downloadFromAppStore: 'App Store dan yuklab olish',
     downloadFromGooglePlay: 'Google Play dan yuklab olish',
+    
+    // Google Play Store download
+    dontHaveGooglePlay: 'Google Play do\'koni yo\'qmi?',
+    installGooglePlay: 'Google Play do\'konini o\'rnatish',
+    googlePlayInstructions: 'Agar qurilmangizda Google Play do\'koni bo\'lmasa, quyidagi amallarni bajaring:',
+    googlePlayStep1: 'Quyidagi tugma orqali Google Play do\'koni APK-sini yuklab oling',
+    googlePlayStep2: 'Qurilma sozlamalarida noma\'lum manbalardan o\'rnatishga ruxsat bering',
+    googlePlayStep3: 'Yuklab olingan APK faylini ochib, o\'rnating',
+    googlePlayStep4: 'O\'rnatilgandan so\'ng, ilovamizni Google Play-dan yuklab olishingiz mumkin',
+    downloadGooglePlay: 'Google Play do\'koni APK-sini yuklab olish',
+    safetyNote: 'Eslatma: Xavfsizligingiz uchun faqat ishonchli manbalardan yuklab oling',
   }
 };
 
