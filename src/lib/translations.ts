@@ -40,6 +40,10 @@ export const translations = {
     month: 'Month',
     year: 'Year',
     
+    // Sensor Data
+    realTimeSensorData: 'Real-Time Sensor Data',
+    sensorTrends: 'Sensor Trends',
+    
     // Footer
     copyright: '© {year} Weather Station Dashboard',
     
@@ -110,6 +114,10 @@ export const translations = {
     week: 'Hafta',
     month: 'Oy',
     year: 'Yil',
+    
+    // Sensor Data
+    realTimeSensorData: 'Sensorlardan real vaqt ma\'lumotlari',
+    sensorTrends: 'Sensor tendensiyalari',
     
     // Footer
     copyright: '© {year} Ob-havo stantsiyasi paneli',

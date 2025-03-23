@@ -1,43 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import WeatherCard from "./WeatherCard";
-
-const API_URL = "https://weather-backend-66vu.onrender.com/api/weather";
+import { useSensorData } from "@/lib/SensorContext";
 
 const LiveWeather: React.FC = () => {
-  const [temperature, setTemperature] = useState<number | null>(null);
-  const [humidity, setHumidity] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchWeather = async () => {
-    try {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      setTemperature(data.temperature);
-      setHumidity(data.humidity);
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching weather data:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchWeather();
-    const interval = setInterval(fetchWeather, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const { currentData, loading } = useSensorData();
 
   return (
     <div className="flex flex-wrap gap-4 justify-center">
       <WeatherCard
         title="Temperature"
-        value={temperature ?? "--"}
+        value={currentData?.temperature_celsius ?? "--"}
         unit="°C"
         loading={loading}
         icon={<span>🌡️</span>}
       />
       <WeatherCard
         title="Humidity"
-        value={humidity ?? "--"}
+        value={currentData?.humidity_percent ?? "--"}
         unit="%"
         loading={loading}
         icon={<span>💧</span>}
